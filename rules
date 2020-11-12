@@ -1,0 +1,13 @@
+iptables -t nat -A PREROUTING -d {SERVER_PUBLIC_IP} -p tcp -m tcp --dport {SERVER_PORT} -j DNAT --to-destination {OVPN_CLIENT_IP}:{OVPN_CLIENT_PORT}
+iptables -t nat -A POSTROUTING -d {OVPN_CLIENT_IP} -p tcp -m tcp --dport {OVPN_CLIENT_PORT} -j SNAT --to-source {OVPN_GATE}
+
+
+example 
+
+yyy.yyy.yyy.yyy:2222 ---> xxx.xxx.xxx.xxx:22
+
+yyy - public server
+XXX - ovpn client
+
+iptables -t nat -A PREROUTING -d yyy.yyy.yyy.yyy -p tcp -m tcp --dport 2222 -j DNAT --to-destination xxx.xxx.xxx.xxx:22
+iptables -t nat -A POSTROUTING -d xxx.xxx.xxx.xxx -p tcp -m tcp --dport 22 -j SNAT --to-source 10.8.0.1
